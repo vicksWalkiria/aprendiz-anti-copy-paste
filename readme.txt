@@ -25,7 +25,7 @@ Este plugin añade una clase al `<body>` y aplica `user-select: none` para imped
 
 == Installation ==
 
-1. Sube la carpeta `anti-copy-paste-aprendiz-de-seo` al directorio `/wp-content/plugins/`.
+1. Sube la carpeta `anti-copy-paste` al directorio `/wp-content/plugins/`.
 2. Activa el plugin en **Plugins** desde tu Escritorio de WordPress.
 3. Configura en **Ajustes → Anti Copy-Paste**.
 

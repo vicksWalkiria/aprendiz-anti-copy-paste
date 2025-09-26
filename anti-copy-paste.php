@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Anti Copy-Paste – Aprendiz de SEO
- * Plugin URI:        https://aprendizdeseo.top
+ * Plugin URI:        https://aprendizdeseo.top/anti-copy-paste/
  * Description:       Bloquea la selección de texto (user-select: none) para dificultar el copiado. Permite excepciones por rol, tipo de contenido y selectores.
  * Version:           1.0.0
  * Requires at least: 5.2
@@ -10,7 +10,7 @@
  * Author URI:        https://aprendizdeseo.top
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       anti-copy-paste-aprendiz-de-seo
+ * Text Domain:       anti-copy-paste
  * Domain Path:       /languages
  */
 
@@ -43,8 +43,8 @@ function acpas_get_options(): array {
  */
 add_action('admin_menu', function () {
     add_options_page(
-        __('Anti Copy-Paste', 'anti-copy-paste-aprendiz-de-seo'),
-        __('Anti Copy-Paste', 'anti-copy-paste-aprendiz-de-seo'),
+        __('Anti Copy-Paste', 'anti-copy-paste'),
+        __('Anti Copy-Paste', 'anti-copy-paste'),
         'manage_options',
         'acpas-settings',
         'acpas_render_settings_page'
@@ -61,18 +61,18 @@ add_action('admin_init', function () {
         'default'           => acpas_default_options(),
     ]);
 
-    add_settings_section('acpas_main', __('Ajustes generales', 'anti-copy-paste-aprendiz-de-seo'), function () {
-        echo '<p>' . esc_html__('Controla dónde se aplica user-select:none y define excepciones.', 'anti-copy-paste-aprendiz-de-seo') . '</p>';
+    add_settings_section('acpas_main', __('Ajustes generales', 'anti-copy-paste'), function () {
+        echo '<p>' . esc_html__('Controla dónde se aplica user-select:none y define excepciones.', 'anti-copy-paste') . '</p>';
     }, 'acpas-settings');
 
     // Activado global
-    add_settings_field('acpas_enabled', __('Activar protección global', 'anti-copy-paste-aprendiz-de-seo'), function () {
+    add_settings_field('acpas_enabled', __('Activar protección global', 'anti-copy-paste'), function () {
         $opt = acpas_get_options();
-        echo '<label><input type="checkbox" name="acpas_options[enabled]" value="1" ' . checked(true, (bool) $opt['enabled'], false) . '> ' . esc_html__('Activar', 'anti-copy-paste-aprendiz-de-seo') . '</label>';
+        echo '<label><input type="checkbox" name="acpas_options[enabled]" value="1" ' . checked(true, (bool) $opt['enabled'], false) . '> ' . esc_html__('Activar', 'anti-copy-paste') . '</label>';
     }, 'acpas-settings', 'acpas_main');
 
     // Excluir roles
-    add_settings_field('acpas_exclude_roles', __('Excluir roles', 'anti-copy-paste-aprendiz-de-seo'), function () {
+    add_settings_field('acpas_exclude_roles', __('Excluir roles', 'anti-copy-paste'), function () {
         $opt = acpas_get_options();
         global $wp_roles;
         $roles = $wp_roles->roles ?? [];
@@ -83,7 +83,7 @@ add_action('admin_init', function () {
     }, 'acpas-settings', 'acpas_main');
 
     // Excluir CPT
-    add_settings_field('acpas_exclude_post_types', __('Excluir tipos de contenido', 'anti-copy-paste-aprendiz-de-seo'), function () {
+    add_settings_field('acpas_exclude_post_types', __('Excluir tipos de contenido', 'anti-copy-paste'), function () {
         $opt = acpas_get_options();
         $post_types = get_post_types(['public' => true], 'objects');
         foreach ($post_types as $pt) {
@@ -93,22 +93,22 @@ add_action('admin_init', function () {
     }, 'acpas-settings', 'acpas_main');
 
     // Selectores permitidos
-    add_settings_field('acpas_extra_allow_selectors', __('Selectores con selección permitida', 'anti-copy-paste-aprendiz-de-seo'), function () {
+    add_settings_field('acpas_extra_allow_selectors', __('Selectores con selección permitida', 'anti-copy-paste'), function () {
         $opt = acpas_get_options();
         echo '<textarea name="acpas_options[extra_allow_selectors]" rows="3" style="width:100%">' . esc_textarea($opt['extra_allow_selectors']) . '</textarea>';
-        echo '<p class="description">' . esc_html__('Separados por comas. Ej.: input, textarea, select, [contenteditable="true"], pre, code, .wp-block-code', 'anti-copy-paste-aprendiz-de-seo') . '</p>';
+        echo '<p class="description">' . esc_html__('Separados por comas. Ej.: input, textarea, select, [contenteditable="true"], pre, code, .wp-block-code', 'anti-copy-paste') . '</p>';
     }, 'acpas-settings', 'acpas_main');
 
     // Bloquear clic derecho
-    add_settings_field('acpas_block_contextmenu', __('Bloquear clic derecho', 'anti-copy-paste-aprendiz-de-seo'), function () {
+    add_settings_field('acpas_block_contextmenu', __('Bloquear clic derecho', 'anti-copy-paste'), function () {
         $opt = acpas_get_options();
-        echo '<label><input type="checkbox" name="acpas_options[block_contextmenu]" value="1" ' . checked(true, (bool) $opt['block_contextmenu'], false) . '> ' . esc_html__('Desactivar menú contextual (opcional)', 'anti-copy-paste-aprendiz-de-seo') . '</label>';
+        echo '<label><input type="checkbox" name="acpas_options[block_contextmenu]" value="1" ' . checked(true, (bool) $opt['block_contextmenu'], false) . '> ' . esc_html__('Desactivar menú contextual (opcional)', 'anti-copy-paste') . '</label>';
     }, 'acpas-settings', 'acpas_main');
 
     // Bloquear evento copiar
-    add_settings_field('acpas_block_copy_event', __('Bloquear evento copiar', 'anti-copy-paste-aprendiz-de-seo'), function () {
+    add_settings_field('acpas_block_copy_event', __('Bloquear evento copiar', 'anti-copy-paste'), function () {
         $opt = acpas_get_options();
-        echo '<label><input type="checkbox" name="acpas_options[block_copy_event]" value="1" ' . checked(true, (bool) $opt['block_copy_event'], false) . '> ' . esc_html__('Intentar bloquear Ctrl/Cmd+C (opcional)', 'anti-copy-paste-aprendiz-de-seo') . '</label>';
+        echo '<label><input type="checkbox" name="acpas_options[block_copy_event]" value="1" ' . checked(true, (bool) $opt['block_copy_event'], false) . '> ' . esc_html__('Intentar bloquear Ctrl/Cmd+C (opcional)', 'anti-copy-paste') . '</label>';
     }, 'acpas-settings', 'acpas_main');
 });
 
@@ -139,7 +139,7 @@ function acpas_render_settings_page() {
     if (!current_user_can('manage_options')) return;
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e('Anti Copy-Paste – Aprendiz de SEO', 'anti-copy-paste-aprendiz-de-seo'); ?></h1>
+        <h1><?php esc_html_e('Anti Copy-Paste – Aprendiz de SEO', 'anti-copy-paste'); ?></h1>
         <form method="post" action="options.php">
             <?php
             settings_fields('acpas_settings_group');
@@ -147,7 +147,7 @@ function acpas_render_settings_page() {
             submit_button();
             ?>
         </form>
-        <p><em><?php esc_html_e('Nota: esta protección es disuasoria; usuarios avanzados pueden desactivarla con herramientas del navegador.', 'anti-copy-paste-aprendiz-de-seo'); ?></em></p>
+        <p><em><?php esc_html_e('Nota: esta protección es disuasoria; usuarios avanzados pueden desactivarla con herramientas del navegador.', 'anti-copy-paste'); ?></em></p>
     </div>
     <?php
 }
@@ -242,6 +242,6 @@ add_action('wp_head', function () {
  */
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links) {
     $url = admin_url('options-general.php?page=acpas-settings');
-    $links[] = '<a href="' . esc_url($url) . '">' . esc_html__('Ajustes', 'anti-copy-paste-aprendiz-de-seo') . '</a>';
+    $links[] = '<a href="' . esc_url($url) . '">' . esc_html__('Ajustes', 'anti-copy-paste') . '</a>';
     return $links;
 });
