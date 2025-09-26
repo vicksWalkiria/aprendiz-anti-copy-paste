@@ -3,7 +3,7 @@ Contributors: aprendizdeseo
 Donate link: https://aprendizdeseo.top
 Tags: copy, protect, selection, user-select, content-protection
 Requires at least: 5.2
-Tested up to: 6.6
+Tested up to: 6.8
 Requires PHP: 7.4
 Stable tag: 1.0.0
 License: GPLv2 or later
@@ -17,41 +17,20 @@ Este plugin añade una clase al `<body>` y aplica `user-select: none` para imped
 
 * Activación/desactivación global.
 * Exclusión por **roles** (ej.: administrador, editor).
-* Exclusión por **tipos de contenido** (post, page, CPT).
-* Lista de **selectores permitidos** donde sí se puede seleccionar (por defecto: inputs, textarea, select, `[contenteditable]`, `pre`, `code`, `.wp-block-code`).
-* Opcional: bloquear **menú contextual** (clic derecho).
-* Opcional: intentar bloquear evento **copiar** (Ctrl/Cmd+C).
+* Exclusión por **tipos de contenido**.
+* Lista de **selectores permitidos** (inputs, textarea, bloques de código…).
+* Opcional: bloquear **menú contextual** y el evento **copiar**.
 
-> Nota: Esta protección es disuasoria; usuarios avanzados pueden desactivarla con herramientas del navegador.
+> Nota: es una protección disuasoria; usuarios avanzados pueden saltársela.
 
 == Installation ==
 
 1. Sube la carpeta `anti-copy-paste-aprendiz-de-seo` al directorio `/wp-content/plugins/`.
-2. Activa el plugin desde **Plugins** en tu Escritorio de WordPress.
-3. Ve a **Ajustes → Anti Copy-Paste** para configurarlo.
-
-== Frequently Asked Questions ==
-
-= ¿Bloquea 100% el copiado? =
-No. Es una medida disuasoria. Usuarios con conocimientos pueden evadirla.
-
-= ¿Afecta al editor del admin? =
-No. Solo actúa en el frontal. Además, por defecto excluye a administradores y editores.
-
-= ¿Puedo permitir selección en zonas concretas? =
-Sí, usando la lista de selectores permitidos (por defecto incluye campos de formulario y bloques de código).
-
-== Screenshots ==
-
-1. Pantalla de ajustes con opciones de exclusión y selectores permitidos.
+2. Activa el plugin en **Plugins** desde tu Escritorio de WordPress.
+3. Configura en **Ajustes → Anti Copy-Paste**.
 
 == Changelog ==
 
 = 1.0.0 =
 * Versión inicial.
-
-== Upgrade Notice ==
-
-= 1.0.0 =
-Primera versión estable.
 
