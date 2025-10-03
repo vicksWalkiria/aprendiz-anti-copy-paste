@@ -1,9 +1,10 @@
 <?php
+
 /**
- * Plugin Name:       Anti Copy-Paste – Aprendiz de SEO
+ * Plugin Name:       Anti Copy-Paste — Aprendiz de SEO
  * Plugin URI:        https://aprendizdeseo.top/anti-copy-paste/
  * Description:       Bloquea la selección de texto (user-select: none) para dificultar el copiado. Permite excepciones por rol, tipo de contenido y selectores.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 5.2
  * Requires PHP:      7.4
  * Author:            Aprendiz De Seo
@@ -17,9 +18,19 @@
 if (!defined('ABSPATH')) exit;
 
 /**
+ * Carga las traducciones del plugin.
+ */
+function acpas_load_textdomain()
+{
+    load_plugin_textdomain('anti-copy-paste', false, dirname(plugin_basename(__FILE__)) . '/languages');
+}
+add_action('plugins_loaded', 'acpas_load_textdomain');
+
+/**
  * Opciones por defecto.
  */
-function acpas_default_options(): array {
+function acpas_default_options(): array
+{
     return [
         'enabled'               => true,
         'exclude_roles'         => ['administrator', 'editor'],
@@ -33,7 +44,8 @@ function acpas_default_options(): array {
 /**
  * Obtiene opciones fusionadas con defaults.
  */
-function acpas_get_options(): array {
+function acpas_get_options(): array
+{
     $saved = (array) get_option('acpas_options', []);
     return array_merge(acpas_default_options(), $saved);
 }
@@ -115,7 +127,8 @@ add_action('admin_init', function () {
 /**
  * Sanitización de opciones.
  */
-function acpas_sanitize_options($input) {
+function acpas_sanitize_options($input)
+{
     $defaults = acpas_default_options();
     $clean = [];
 
@@ -135,11 +148,12 @@ function acpas_sanitize_options($input) {
 /**
  * Render de la página de ajustes.
  */
-function acpas_render_settings_page() {
+function acpas_render_settings_page()
+{
     if (!current_user_can('manage_options')) return;
-    ?>
+?>
     <div class="wrap">
-        <h1><?php esc_html_e('Anti Copy-Paste – Aprendiz de SEO', 'anti-copy-paste'); ?></h1>
+        <h1><?php esc_html_e('Anti Copy-Paste — Aprendiz de SEO', 'anti-copy-paste'); ?></h1>
         <form method="post" action="options.php">
             <?php
             settings_fields('acpas_settings_group');
@@ -149,7 +163,7 @@ function acpas_render_settings_page() {
         </form>
         <p><em><?php esc_html_e('Nota: esta protección es disuasoria; usuarios avanzados pueden desactivarla con herramientas del navegador.', 'anti-copy-paste'); ?></em></p>
     </div>
-    <?php
+<?php
 }
 
 /**
@@ -193,48 +207,54 @@ add_action('wp_head', function () {
     if ($allow === '') {
         $allow = 'input, textarea, select, [contenteditable="true"]';
     }
-    ?>
+?>
     <style id="acpas-css">
-    .acpas-no-select, .acpas-no-select * {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-    .acpas-no-select <?php echo esc_html($allow); ?> {
-        -webkit-user-select: text;
-        -moz-user-select: text;
-        -ms-user-select: text;
-        user-select: text;
-    }
+        .acpas-no-select,
+        .acpas-no-select * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .acpas-no-select <?php echo esc_html($allow); ?> {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
     </style>
     <?php if (!empty($opt['block_contextmenu'])): ?>
         <script id="acpas-contextmenu">
-        document.addEventListener('contextmenu', function(e){
-            const allowed = document.querySelectorAll('<?php echo esc_js($allow); ?>');
-            let allow = false;
-            allowed.forEach(function (el) {
-                if (el.contains(e.target)) allow = true;
+            document.addEventListener('contextmenu', function(e) {
+                const allowed = document.querySelectorAll('<?php echo esc_js($allow); ?>');
+                let allow = false;
+                allowed.forEach(function(el) {
+                    if (el.contains(e.target)) allow = true;
+                });
+                if (!allow) e.preventDefault();
+            }, {
+                passive: false
             });
-            if (!allow) e.preventDefault();
-        }, {passive:false});
         </script>
     <?php endif; ?>
     <?php if (!empty($opt['block_copy_event'])): ?>
         <script id="acpas-copy">
-        document.addEventListener('copy', function(e){
-            const allowed = document.querySelectorAll('<?php echo esc_js($allow); ?>');
-            let allow = false;
-            allowed.forEach(function (el) {
-                if (el.contains(window.getSelection()?.anchorNode)) allow = true;
+            document.addEventListener('copy', function(e) {
+                const allowed = document.querySelectorAll('<?php echo esc_js($allow); ?>');
+                let allow = false;
+                allowed.forEach(function(el) {
+                    if (el.contains(window.getSelection()?.anchorNode)) allow = true;
+                });
+                if (!allow) {
+                    e.preventDefault();
+                    try {
+                        navigator.clipboard && navigator.clipboard.writeText('');
+                    } catch (e) {}
+                }
             });
-            if (!allow) {
-                e.preventDefault();
-                try { navigator.clipboard && navigator.clipboard.writeText(''); } catch(e){}
-            }
-        });
         </script>
-    <?php endif;
+<?php endif;
 });
 
 /**
